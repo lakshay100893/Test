@@ -18,7 +18,7 @@ class RoleController extends Controller
                 ->addIndexColumn()
                 ->orderColumn('id', 'name $1')
                 ->addColumn('action', function ($row) {
-                    $actionBtn = '<a href="' . route('Userprofile', ['id' => $row->id]) . '" class="edit btn btn-success btn-sm">View</a>';
+                    $actionBtn = '<a href="javascript:void(0);" data-toggle="modal" data-target="#exampleModal-4" data-whatever="Set Permission to '.strtoupper($row->name).'" data-id="'.$row->id.'" class="edit btn btn-success btn-sm">View</a>';
                     return $actionBtn;
                 })
                 ->addColumn('created_at', function ($row) {
@@ -32,28 +32,6 @@ class RoleController extends Controller
         }
 
         return view('Role.index');
-    }
-
-    public function listing(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = Role::withCount('permissions')->latest();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->orderColumn('id', 'name $1')
-                ->addColumn('action', function ($row) {
-                    $actionBtn = '<a href="' . route('Userprofile', ['id' => $row->id]) . '" class="edit btn btn-success btn-sm">View</a>';
-                    return $actionBtn;
-                })
-                ->addColumn('created_at', function ($row) {
-                    return $row->created_at ? Carbon::parse($row->created_at)->format('d M Y') : '';
-                })
-                ->addColumn('permissions_count', function ($row) {
-                    return $row->permissions_count . ' Permission';
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
     }
 
     public function store(Request $request)
@@ -75,7 +53,11 @@ class RoleController extends Controller
 
     public function update(Request $request)
     {
+        return $request;
+    }
 
+    public function assignPermission(Request $request)
+    {
         return $request;
     }
 }

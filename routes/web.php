@@ -44,7 +44,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/Userlist', [App\Http\Controllers\User::class, 'index'])->name('Userlist');
 
     /* User Listing getting by Datatable */
-    Route::get('/lsiting', [App\Http\Controllers\User::class, 'listing'])->name('lsiting');
+    Route::get('/lsiting', [App\Http\Controllers\User::class, 'index'])->name('lsiting');
 
 
     /* Role Page listing */
@@ -58,6 +58,9 @@ Route::middleware(['auth'])->group(function () {
 
     /* Role Edit */
     Route::PUT('/role', [App\Http\Controllers\RoleController::class, 'update'])->name('role');
+    
+    /* Assign Permission To role  */
+    Route::post('/setPermisssion', [App\Http\Controllers\RoleController::class, 'assignPermission'])->name('permission.set');
 
     /* Permission page With Listing */
     Route::get('/permission', [App\Http\Controllers\Permission::class, 'index'])->name('permission');

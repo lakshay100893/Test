@@ -20,7 +20,7 @@
                 <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
+                            <table id="order-listing" class="table dataTable table-hover no-footer" role="grid" aria-describedby="order-listing_info">
                                 <thead>
                                     <tr role="row">
                                         <th>Sn.</th>
@@ -39,7 +39,47 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="exampleModal-4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-3" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <form action="{{ route('profile') }}" id="profilePicUpload" method="post" enctype="multipart/form-data">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel-3"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                    <input type="hidden" name="id" value="">
+                    <div class="container-fluid">
+                        <div class="row">
+                            @forelse(Spatie\Permission\Models\Permission::all() as $per)
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <div class="form-group">
+                                    <div class="form-check form-check-success">
+                                        <label class="form-check-label">
+                                            <input type="checkbox" value="{{ $per->id }}" class="form-check-input"> {{strtoupper($per->name)}} <i class="input-helper"></i></label>
+                                    </div>
+                                </div>
+                            </div>
+                            @empty
+                            <div class="col-sm-12">
+                                <blockquote class="blockquote blockquote-primary">
+                                    <p>No permission Available For assign.</p>
+                                </blockquote>
+                            </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 @section('jcCode')
 <script src="assets/js/jquery.dataTables.js"></script>
@@ -48,7 +88,7 @@
     (function($) {
         'use strict';
         $(function() {
-           var DTable = $('#order-listing').DataTable({
+            var DTable = $('#order-listing').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('role.listing') }}",
@@ -59,7 +99,7 @@
                         data: 'name',
                         name: 'name',
                         orderable: true,
-                    }, 
+                    },
                     {
                         data: 'permissions_count',
                         name: 'permissions_count',
