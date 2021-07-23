@@ -131,8 +131,6 @@
                 e.preventDefault();
                 var formData = new FormData(this);
                 var bar = $('.progress-bar');
-                // console.log(bar);
-                // console.log(formData);
                 $.ajax({
                     type: 'POST',
                     url: "{{ url('profile')}}",

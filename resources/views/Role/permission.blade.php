@@ -1,15 +1,15 @@
 @extends('layouts.app')
-@section('title','Role listing -Curno Medical')
+@section('title','Permission listing -Curno Medical')
 @section('content')
 
 
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title">Role's table</h4>
+        <h4 class="card-title">Permssion's table</h4>
         <div class="row">
             <div class="col-sm-6">
                 <div class="add-items d-flex">
-                    <input type="text" class="form-control todo-list-input" placeholder="Which role do you have to create today?">
+                    <input type="text" class="form-control todo-list-input" placeholder="Which permission do you have to create today?">
                     <button class="add btn btn-gradient-primary font-weight-bold todo-list-add-btn" id="add-task">Add</button>
                 </div>
             </div>
@@ -25,7 +25,6 @@
                                     <tr role="row">
                                         <th>Sn.</th>
                                         <th>Name</th>
-                                        <th>Count</th>
                                         <th>Created On</th>
                                         <th>Action</th>
                                     </tr>
@@ -48,10 +47,10 @@
     (function($) {
         'use strict';
         $(function() {
-           var DTable = $('#order-listing').DataTable({
+            var DTable =  $('#order-listing').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('role.listing') }}",
+                ajax: "{{ route('permission') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'id',
@@ -60,12 +59,6 @@
                         name: 'name',
                         orderable: true,
                     }, 
-                    {
-                        data: 'permissions_count',
-                        name: 'permissions_count',
-                        orderable: true,
-                        searchable: false
-                    },
                     {
                         data: 'created_at',
                         name: 'created_at',
@@ -87,17 +80,17 @@
             $('.todo-list-add-btn').on("click", function(event) {
                 event.preventDefault();
 
-                var role = $(this).prevAll('.todo-list-input').val();
+                var value = $(this).prevAll('.todo-list-input').val();
                 $.ajax({
                     type: 'POST',
-                    url: "{{ url('role')}}",
+                    url: "{{ url('permission')}}",
                     data: {
-                        'name': role
+                        'name': value
                     },
                     success: (data) => {
                         $('.validation_remove-msg').remove();
                         if (data.status && data.status > 0) {
-                            swal("Role Created", data.massage, "success");
+                            swal("Permission Created", data.massage, "success");
                             $(this).prevAll('.todo-list-input').val('');
                             DTable.draw();
                         }

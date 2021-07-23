@@ -42,7 +42,7 @@
       <div class="collapse" id="rolePermission">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" href="{{ route('role') }}">Add Role</a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{ route('Userlist') }}">Add Permission</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{ route('permission') }}">Add Permission</a></li>
         </ul>
       </div>
     </li>

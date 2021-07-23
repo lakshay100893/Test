@@ -12,11 +12,12 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Auth::routes();
 
 Route::get('/', function () {
     if (Auth::check()) {
-        return redirect()->intended('/home')->with('success','You Are Already loggedin');
+        return redirect()->intended('/home')->with('success', 'You Are Already loggedin');
     }
     return view('welcome');
 });
@@ -44,10 +45,27 @@ Route::middleware(['auth'])->group(function () {
 
     /* User Listing getting by Datatable */
     Route::get('/lsiting', [App\Http\Controllers\User::class, 'listing'])->name('lsiting');
-    
-    
-    
+
+
+    /* Role Page listing */
     Route::get('/role', [App\Http\Controllers\RoleController::class, 'index'])->name('role');
+
+    /* Role listing Getting by Data table */
+    Route::get('/role/listing', [App\Http\Controllers\RoleController::class, 'index'])->name('role.listing');
+
+    /* Role Add by Ajax */
+    Route::post('/role', [App\Http\Controllers\RoleController::class, 'store'])->name('role');
+
+    /* Role Edit */
+    Route::PUT('/role', [App\Http\Controllers\RoleController::class, 'update'])->name('role');
+
+    /* Permission page With Listing */
+    Route::get('/permission', [App\Http\Controllers\Permission::class, 'index'])->name('permission');
+
+    /* Add Permission by Ajax */
+    Route::post('/permission', [App\Http\Controllers\Permission::class, 'store'])->name('permission');
+
+
 
 
 

@@ -83,46 +83,32 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Category</label>
-                        <div class="col-sm-9">
-                            <select class="form-control">
-                                <option>Category1</option>
-                                <option>Category2</option>
-                                <option>Category3</option>
-                                <option>Category4</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Membership</label>
-                        <div class="col-sm-4">
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios1" value="" checked=""> Free <i class="input-helper"></i></label>
-                            </div>
-                        </div>
-                        <div class="col-sm-5">
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios2" value="option2"> Professional <i class="input-helper"></i></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
             <p class="card-description"> Login info </p>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-8">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}">
                             @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Role</label>
+                        <div class="col-sm-9">
+                            <select class="form-control @error('role') is-invalid @enderror" name="role">
+                                <option value="">Select One</option>
+                                @foreach(Spatie\Permission\Models\Role::all() as $value)
+                                    <option {{ (old('role'))?((old('role')==$value)?'selected':''):'' }} value="{{$value->id}}">{{$value->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('role')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
