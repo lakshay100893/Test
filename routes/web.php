@@ -8,7 +8,6 @@ use App\Http\Controllers\User as ControllersUser;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
     /* User Listing Page And Getting by Ajax  */
     Route::get('/Userlist', [ControllersUser::class, 'index'])->middleware('can:User List')->name('Userlist');
 
-    
+
     Route::group(['middleware' => ['can:User Edit']], function () {
 
         /* User Edit Page  */
@@ -71,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/role', [RoleController::class, 'store'])->name('role');
 
         /* Role Edit */
-        Route::PUT('/role', [RoleController::class, 'update'])->name('role');
+        Route::post('/roleEdit', [RoleController::class, 'update'])->name('roleEdit');
 
         /* Get Assigned Permission To role  */
         Route::post('/getPermisssion', [RoleController::class, 'getPermssion'])->name('permission.get');
@@ -90,6 +89,9 @@ Route::middleware(['auth'])->group(function () {
         /* Add Permission by Ajax */
         Route::post('/permission', [Permission::class, 'store'])->name('permission');
         
+        /* Edit Permission by Ajax */
+        Route::post('/permissionEdit', [Permission::class, 'update'])->name('permissionEdit');
+
     });
     
 });

@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 use Yajra\DataTables\Facades\DataTables;
-
 
 
 class RoleController extends Controller
@@ -22,7 +22,9 @@ class RoleController extends Controller
                 ->addIndexColumn()
                 ->orderColumn('id', 'name $1')
                 ->addColumn('action', function ($row) {
+                    
                     $actionBtn = '<a href="javascript:void(0);" data-toggle="modal" data-target="#exampleModal-4" data-whatever="Set Permission to ' . strtoupper($row->name) . '" data-id="' . $row->id . '" class="edit btn btn-success btn-sm getPermssion">Set</a>';
+                    $actionBtn .= ' <a href="javascript:void(0);" data-toggle="modal" data-target="#EditRoleModal" data-whatever="Role Name Edit :- '.strtoupper($row->name).' " data-id="' . $row->id . '" data-value="' . $row->name . '" class="edit btn btn-success btn-sm getPermssion">Edit</a>';
                     return $actionBtn;
                 })
                 ->addColumn('created_at', function ($row) {
@@ -57,7 +59,21 @@ class RoleController extends Controller
 
     public function update(Request $request)
     {
-        return $request;
+        $response = array();
+
+        $Validator = Validator::make($request->all(), [
+            'id' => ['required'],
+            'name' => ['required',Rule::unique(config('permission.table_names.roles'))->ignore($request->input('id'))],
+        ]);
+
+        if ($Validator->fails()) {
+            $response = ['error' => $Validator->errors('name')];
+        } else {
+            $existRole = Role::findById($request->input('id'));
+            Role::where('id',$request->input('id'))->update(['name'=>$request->input('name')]);
+            $response = ['status' => 1, 'massage' => 'Successfully Update Role '.$existRole->name.' To ' . $request->input('name')];
+        }
+        return $response;
     }
 
     public function assignPermission(Request $request)

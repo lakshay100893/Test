@@ -80,6 +80,41 @@
         </form>
     </div>
 </div>
+
+
+<div class="modal fade" id="EditRoleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-3" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <form action="{{ route('profile') }}" id="RoleEdit" method="post" enctype="multipart/form-data">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-3"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <input type="hidden" name="id" value="">
+                    <div class="form-group">
+                        <label for="exampleInputUsername1">Role Name</label>
+                        <input type="text" name="name" class="form-control" id="exampleInputUsername1" placeholder="Role Name" value="">
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 @endsection
 @section('jcCode')
 <script src="assets/js/jquery.dataTables.js"></script>
@@ -174,7 +209,7 @@
                         } else {
                             swal('Permssion Set ' + data.name, 'All Permissoin Removed', 'info')
                         }
-                        DTable.ajax.reload( null, false );
+                        DTable.ajax.reload(null, false);
                     },
                     error: function(data) {
                         console.log(data);
@@ -192,11 +227,39 @@
                         id
                     },
                     success: (data) => {
-                        
+
                         $("#permissionSet input:checkbox").prop("checked", false);
                         if (data.length > 0) {
                             $.each(data, function(i, v) {
                                 $("#permissionSet input[value=" + v.id + "]").prop("checked", true);
+                            });
+                        }
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            });
+
+            $(document).on('submit', '#RoleEdit', function(e) {
+                e.preventDefault();
+                var formdata = new FormData(this);
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('roleEdit')}}",
+                    data: formdata,
+                    contentType: false,
+                    processData: false,
+                    success: (data) => {
+                        $('.validation_remove-msg').remove();
+                        if (data.status) {
+                            swal('Role Update',data.massage, 'success');
+                            DTable.ajax.reload(null, false);
+                            $(this).parents('.modal').modal('hide');
+                        }
+                        if (data.error) {
+                            $.each(data.error.name, function(i, v) {
+                                $('#RoleEdit input[name="name"]').parent('div').after('<span class="validation_remove-msg d-block text-danger">' + v + '</span>');
                             });
                         }
                     },

@@ -39,6 +39,46 @@
     </div>
 </div>
 
+<div class="modal fade" id="exampleModal-4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-3" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <form action="javascript:void(0);" id="permissionEdit" method="post" enctype="multipart/form-data">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-3"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" value="">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <p>
+                                    <input type="hidden" name="id" value="">
+                                <div class="form-group">
+                                    <label for="exampleInputUsername1">Permission Name</label>
+                                    <input type="text" name="name" class="form-control" id="exampleInputUsername1" placeholder="Permission Name" value="">
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
 @endsection
 @section('jcCode')
 <script src="assets/js/jquery.dataTables.js"></script>
@@ -47,7 +87,7 @@
     (function($) {
         'use strict';
         $(function() {
-            var DTable =  $('#order-listing').DataTable({
+            var DTable = $('#order-listing').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('permission') }}",
@@ -58,7 +98,7 @@
                         data: 'name',
                         name: 'name',
                         orderable: true,
-                    }, 
+                    },
                     {
                         data: 'created_at',
                         name: 'created_at',
@@ -111,8 +151,32 @@
 
             });
 
-            todoListItem.on('click', '.remove', function() {
-                $(this).parent().remove();
+            $(document).on('submit', '#permissionEdit', function(e) {
+                e.preventDefault();
+                var formdata = new FormData(this);
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('permissionEdit')}}",
+                    data: formdata,
+                    contentType: false,
+                    processData: false,
+                    success: (data) => {
+                        $('.validation_remove-msg').remove();
+                        if (data.status) {
+                            swal('Permssion Update',data.massage, 'success');
+                            DTable.ajax.reload(null, false);
+                            $(this).parents('.modal').modal('hide');
+                        }
+                        if (data.error) {
+                            $.each(data.error.name, function(i, v) {
+                                $('#permissionEdit input[name="name"]').parent('div').after('<span class="validation_remove-msg d-block text-danger">' + v + '</span>');
+                            });
+                        }
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
             });
 
 
