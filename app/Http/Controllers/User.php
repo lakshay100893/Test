@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\LocumUser;
 use App\Models\User as Users;
 use App\Models\UserFile;
 use Carbon\Carbon;
@@ -68,10 +69,6 @@ class User extends Controller
       'first_name' => $request->input('first_name'),
       'last_name' => $request->input('last_name'),
       'gender' => $request->input('gender'),
-      'home_address' => $request->input('home_address'),
-      'dob' => $request->input('dob'),
-      'profile_summary' => $request->input('profile_summary'),
-      'key_skills' => $request->input('key_skills'),
       'email' => $request->input('email'),
     );
 
@@ -79,12 +76,15 @@ class User extends Controller
       $data['password'] = Hash::make($request->input('password'));
     }
 
-
-
     DB::beginTransaction();
     try {
-      $id->Update(['id' => $id->id], $data);
-      $id->LocumUser()->create($data);
+      Users::where(['id' => $id->id])->Update($data);
+      LocumUser::where(['user_id' => $id->id])->Update([
+        'home_address' => $request->input('home_address'),
+        'dob' => $request->input('dob'),
+        'profile_summary' => $request->input('profile_summary'),
+        'key_skills' => $request->input('key_skills'),
+      ]);
       if ($request->hasfile('file_url')) {
         foreach ($request->file('file_url') as $files) {
           $Ext =  $files->extension();
