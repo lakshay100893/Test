@@ -71,6 +71,12 @@
                             <a href="mailto:{{$user->email}}">{{$user->email}}</a>
                         </span></span>
                     </h6>
+                    <h6 class="clearfix">
+                        <span class="float-left"> Role </span>
+                        <span class="float-right text-muted">
+                            <a href="javascript:void(0);">{{ $user->getRoleNames()->implode('name',',') }}</a>
+                        </span></span>
+                    </h6>
                     <ul class="list-arrow">
                         @forelse ($user->UserFile as $user)
                         <li><a class="" download="" href="{{asset($user->file_url)}}"> Document No. {{$loop->index+1}} Download</a></li>

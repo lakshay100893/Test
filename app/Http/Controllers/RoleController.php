@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
+
+
 
 class RoleController extends Controller
 {
@@ -18,7 +21,7 @@ class RoleController extends Controller
                 ->addIndexColumn()
                 ->orderColumn('id', 'name $1')
                 ->addColumn('action', function ($row) {
-                    $actionBtn = '<a href="javascript:void(0);" data-toggle="modal" data-target="#exampleModal-4" data-whatever="Set Permission to '.strtoupper($row->name).'" data-id="'.$row->id.'" class="edit btn btn-success btn-sm">View</a>';
+                    $actionBtn = '<a href="javascript:void(0);" data-toggle="modal" data-target="#exampleModal-4" data-whatever="Set Permission to ' . strtoupper($row->name) . '" data-id="' . $row->id . '" class="edit btn btn-success btn-sm getPermssion">Set</a>';
                     return $actionBtn;
                 })
                 ->addColumn('created_at', function ($row) {
@@ -58,6 +61,24 @@ class RoleController extends Controller
 
     public function assignPermission(Request $request)
     {
-        return $request;
+
+        if ($request->ajax()) {
+            $role = Role::findById($request->id);
+            $Permission = $role->revokePermissionTo($role->getAllPermissions());
+            if ($request->has('permission')) {
+                $Permission = Permission::findMany($request->permission);
+                $Permission = $role->givePermissionTo($Permission);
+            }
+            
+            return $Permission;
+        }
+    }
+
+    public function getPermssion(Request $request)
+    {
+        if ($request->ajax()) {
+            $role = Role::findById($request->id);
+            return $role->getAllPermissions();
+        }
     }
 }

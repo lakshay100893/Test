@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Role;
 
 
 class RegisterController extends Controller
@@ -45,7 +46,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','can:User Add']);
     }
 
     /**
@@ -91,16 +92,21 @@ class RegisterController extends Controller
                     $name = time() . rand(1, 100) . '.' . $Ext;
                     $files->move(public_path('UserFiles'), $name);
                     $file = File::create(['file_url' => ('UserFiles/' . $name), 'type' => $Ext]);
-                    UserFile::create([ 'file_id'=>$file->id, 'user_id'=>$user->id, ]);
+                    UserFile::create(['file_id' => $file->id, 'user_id' => $user->id,]);
                 }
             }
+            if ($request->has('role')) {
+                $role = Role::findById($request->role);
+                $user->assignRole($role->name);
+            }
+
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error($th);
             return redirect()->back()->withInput()->with('error', 'Something Wrong. Try Again');
         }
-        
+
         return redirect()->back()->with('success', 'User Created Successfully');
     }
 }

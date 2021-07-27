@@ -43,22 +43,27 @@ Route::middleware(['auth'])->group(function () {
     /* User Listing Page  */
     Route::get('/Userlist', [App\Http\Controllers\User::class, 'index'])->name('Userlist');
 
+    /* User Edit Page  */
+    Route::get('/UserEdit/{id}', [App\Http\Controllers\User::class, 'edit'])->name('UserEdit');
+    
+    /* User Edit Page Submit */
+    Route::post('/UserEdit/{id}', [App\Http\Controllers\User::class, 'Update'])->name('UserEdit');
+
     /* User Listing getting by Datatable */
     Route::get('/lsiting', [App\Http\Controllers\User::class, 'index'])->name('lsiting');
 
-
-    /* Role Page listing */
+    /* Role Page listing And Listing Using Ajax */
     Route::get('/role', [App\Http\Controllers\RoleController::class, 'index'])->name('role');
-
-    /* Role listing Getting by Data table */
-    Route::get('/role/listing', [App\Http\Controllers\RoleController::class, 'index'])->name('role.listing');
 
     /* Role Add by Ajax */
     Route::post('/role', [App\Http\Controllers\RoleController::class, 'store'])->name('role');
 
     /* Role Edit */
     Route::PUT('/role', [App\Http\Controllers\RoleController::class, 'update'])->name('role');
-    
+
+    /* Get Assigned Permission To role  */
+    Route::post('/getPermisssion', [App\Http\Controllers\RoleController::class, 'getPermssion'])->name('permission.get');
+
     /* Assign Permission To role  */
     Route::post('/setPermisssion', [App\Http\Controllers\RoleController::class, 'assignPermission'])->name('permission.set');
 

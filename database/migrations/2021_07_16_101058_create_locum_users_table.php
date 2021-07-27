@@ -18,9 +18,9 @@ class CreateLocumUsersTable extends Migration
             $table->integer('user_id');
             $table->longText('home_address');
             $table->string('dob',100);
-            $table->string('gmc_number');
-            $table->integer('specialty_id');
-            $table->integer('grade_id');
+            $table->string('gmc_number')->nullable();
+            $table->integer('specialty_id')->default(0);
+            $table->integer('grade_id')->default(0);
             $table->string('profile_summary');
             $table->string('key_skills');
             $table->timestamps();

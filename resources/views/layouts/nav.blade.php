@@ -21,11 +21,15 @@
       <li class="nav-item nav-profile dropdown">
         <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
           <div class="nav-profile-img">
+            @auth
             <img src="{{ asset( (Auth::user()->avtar) ? Auth::user()->avtar : 'assets/images/faces/face1.jpg') }}" width="32px" height="32px" alt="image">
+            @endauth
             <span class="availability-status online"></span>
           </div>
           <div class="nav-profile-text">
+          @auth
             <p class="mb-1 text-black">{{Auth::user()->first_name.' '.Auth::user()->last_name}}</p>
+            @endauth
           </div>
         </a>
         <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">

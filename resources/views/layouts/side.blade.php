@@ -3,13 +3,17 @@
     <li class="nav-item nav-profile">
       <a href="#" class="nav-link">
         <div class="nav-profile-image">
+        @auth
           <img src="{{ asset( (Auth::user()->avtar) ? Auth::user()->avtar : 'assets/images/faces/face1.jpg') }}" width="32px" height="32px" alt="profile">
+          @endauth
           <span class="login-status online"></span>
           <!--change to offline or busy as needed-->
         </div>
         <div class="nav-profile-text d-flex flex-column">
+          @auth
           <span class="font-weight-bold mb-2">{{Auth::user()->first_name.' '.Auth::user()->last_name}}</span>
           <span class="text-secondary text-small">{{Auth::user()->title}}</span>
+          @endauth
         </div>
         <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
       </a>
@@ -28,7 +32,9 @@
       </a>
       <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">
+          @can('User Add')
           <li class="nav-item"> <a class="nav-link" href="{{ route('register') }}">Add</a></li>
+          @endcan
           <li class="nav-item"> <a class="nav-link" href="{{ route('Userlist') }}">List</a></li>
         </ul>
       </div>

@@ -41,24 +41,24 @@
 </div>
 <div class="modal fade" id="exampleModal-4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-3" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
-        <form action="{{ route('profile') }}" id="profilePicUpload" method="post" enctype="multipart/form-data">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel-3"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
+        <form action="{{ route('permission.set') }}" id="permissionSet" method="post" enctype="multipart/form-data">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-3"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
                     <input type="hidden" name="id" value="">
                     <div class="container-fluid">
                         <div class="row">
-                            @forelse(Spatie\Permission\Models\Permission::all() as $per)
+                            @forelse(Spatie\Permission\Models\Permission::all() as $key => $per)
                             <div class="col-sm-6 col-md-3 col-lg-2">
                                 <div class="form-group">
                                     <div class="form-check form-check-success">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" value="{{ $per->id }}" class="form-check-input"> {{strtoupper($per->name)}} <i class="input-helper"></i></label>
+                                        <label for="id-{{$key}}" class="form-check-label">
+                                            <input id="id-{{$key}}" name="permission[]" type="checkbox" value="{{ $per->id }}" class="form-check-input"> {{strtoupper($per->name)}} <i class="input-helper"></i></label>
                                     </div>
                                 </div>
                             </div>
@@ -91,7 +91,7 @@
             var DTable = $('#order-listing').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('role.listing') }}",
+                ajax: "{{ route('role') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'id',
@@ -158,11 +158,53 @@
 
             });
 
-            todoListItem.on('click', '.remove', function() {
-                $(this).parent().remove();
+            $(document).on('submit', '#permissionSet', function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('permission.set')}}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: (data) => {
+                        $(this).parents('.modal').modal('hide')
+                        if (data.permissions.length > 0) {
+                            swal('Permssion Set ' + data.name, 'Permissoin Set SuccessFully', 'success')
+                        } else {
+                            swal('Permssion Set ' + data.name, 'All Permissoin Removed', 'info')
+                        }
+                        DTable.ajax.reload( null, false );
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
             });
 
-
+            $(document).on('click', '.getPermssion', function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('permission.get')}}",
+                    data: {
+                        id
+                    },
+                    success: (data) => {
+                        
+                        $("#permissionSet input:checkbox").prop("checked", false);
+                        if (data.length > 0) {
+                            $.each(data, function(i, v) {
+                                $("#permissionSet input[value=" + v.id + "]").prop("checked", true);
+                            });
+                        }
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            });
 
 
         });

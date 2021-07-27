@@ -11,13 +11,14 @@
                 <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
+                            <table id="order-listing" class="table table-sm table-hover dataTable" role="grid" aria-describedby="order-listing_info">
                                 <thead>
                                     <tr role="row">
                                         <th>Title</th>
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Gender</th>
+                                        <th>Role</th>
                                         <th>Status</th>
                                         <th>DOB</th>
                                         <th>Action</th>
@@ -61,6 +62,10 @@
                     {
                         data: 'gender',
                         name: 'gender'
+                    },
+                    {
+                        data: 'role',
+                        name: 'role'
                     },
                     {
                         data: 'status',

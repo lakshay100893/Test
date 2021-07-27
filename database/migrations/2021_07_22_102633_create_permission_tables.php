@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 
 class CreatePermissionTables extends Migration
 {
@@ -37,6 +39,15 @@ class CreatePermissionTables extends Migration
 
             $table->unique(['name', 'guard_name']);
         });
+
+        DB::table($tableNames['roles'])->insert(
+            array(
+                'name' => 'Super Admin',
+                'guard_name'=>config('auth.defaults.guard'),
+                'created_at'=>Date::now(),
+                'updated_at'=>Date::now(),
+            )
+        );
 
         Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames) {
             $table->unsignedBigInteger('permission_id');
