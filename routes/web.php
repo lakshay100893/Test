@@ -41,7 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile/{id}', [App\Http\Controllers\Profile::class, 'show'])->name('Userprofile');
 
     /* User Listing Page  */
-    Route::get('/Userlist', [App\Http\Controllers\User::class, 'index'])->name('Userlist');
+    Route::get('/Userlist', [App\Http\Controllers\User::class, 'index'])->middleware('can:User List')->name('Userlist');
 
     /* User Edit Page  */
     Route::get('/UserEdit/{id}', [App\Http\Controllers\User::class, 'edit'])->name('UserEdit');

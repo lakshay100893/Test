@@ -31,8 +31,15 @@ class User extends Controller
           return $user->implode('name', ',');
         })
         ->addColumn('action', function ($row) {
-          $actionBtn = '<a href="' . route('Userprofile', ['id' => $row->id]) . '" class="edit btn btn-success btn-sm">View</a>';
-          $actionBtn .= ' <a href="' . route('UserEdit', ['id' => $row->id]) . '" class="edit btn btn-success btn-sm">Edit</a>';
+          $actionBtn = '';
+          if (auth()->user()->canany(['User View', 'User Edit'])) {
+            if (auth()->user()->can('User View')) {
+              $actionBtn .= '<a href="' . route('Userprofile', ['id' => $row->id]) . '" class="edit btn btn-success btn-sm">View</a>';
+            }
+            if (auth()->user()->can('User Edit')) {
+              $actionBtn .= ' <a href="' . route('UserEdit', ['id' => $row->id]) . '" class="edit btn btn-success btn-sm">Edit</a>';
+            }
+          }
           return $actionBtn;
         })
         ->rawColumns(['action'])
@@ -94,10 +101,14 @@ class User extends Controller
           UserFile::create(['file_id' => $file->id, 'user_id' => $id->id,]);
         }
       }
-      if ($request->has('role')) {
+      if ($request->has('role') && $request->filled('role')) {
         $role = Role::findById($request->role);
-        $id->removeRole($id->getRoleNames()->first());
+        if($id->hasAnyRole($id->getRoleNames())){
+          $id->removeRole($id->getRoleNames()->first());
+        }
         $id->assignRole($role->name);
+      }else{
+        $id->roles()->detach();
       }
       DB::commit();
     } catch (\Throwable $th) {

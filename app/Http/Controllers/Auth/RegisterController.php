@@ -81,6 +81,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $request = request();
+
         DB::beginTransaction();
         try {
             $data['password'] = Hash::make($data['password']);
@@ -95,7 +96,7 @@ class RegisterController extends Controller
                     UserFile::create(['file_id' => $file->id, 'user_id' => $user->id,]);
                 }
             }
-            if ($request->has('role')) {
+            if ($request->has('role') && $request->filled('role')) {
                 $role = Role::findById($request->role);
                 $user->assignRole($role->name);
             }
