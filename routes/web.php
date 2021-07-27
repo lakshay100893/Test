@@ -1,7 +1,14 @@
 <?php
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Profile;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Permission;
+use App\Http\Controllers\User as ControllersUser;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,55 +33,63 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
 
     /* Dashboard Page  */
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     /* Side menu Hide And Show */
-    Route::post('/headerFix', [App\Http\Controllers\HomeController::class, 'headerFix'])->name('headerFix');
+    Route::post('/headerFix', [HomeController::class, 'headerFix'])->name('headerFix');
 
     /* Profile Page Open  */
-    Route::get('/profile', [App\Http\Controllers\Profile::class, 'show'])->name('profile');
+    Route::get('/profile', [Profile::class, 'show'])->name('profile');
 
     /* Profile Image Update */
-    Route::post('/profile', [App\Http\Controllers\Profile::class, 'update'])->name('profile');
+    Route::post('/profile', [Profile::class, 'update'])->name('profile');
 
     /* User Profile View */
-    Route::get('/profile/{id}', [App\Http\Controllers\Profile::class, 'show'])->name('Userprofile');
+    Route::get('/profile/{id}', [Profile::class, 'show'])->middleware('can:User View')->name('Userprofile');
 
-    /* User Listing Page  */
-    Route::get('/Userlist', [App\Http\Controllers\User::class, 'index'])->middleware('can:User List')->name('Userlist');
+    /* User Listing Page And Getting by Ajax  */
+    Route::get('/Userlist', [ControllersUser::class, 'index'])->middleware('can:User List')->name('Userlist');
 
-    /* User Edit Page  */
-    Route::get('/UserEdit/{id}', [App\Http\Controllers\User::class, 'edit'])->name('UserEdit');
     
-    /* User Edit Page Submit */
-    Route::post('/UserEdit/{id}', [App\Http\Controllers\User::class, 'Update'])->name('UserEdit');
+    Route::group(['middleware' => ['can:User Edit']], function () {
 
-    /* User Listing getting by Datatable */
-    Route::get('/lsiting', [App\Http\Controllers\User::class, 'index'])->name('lsiting');
+        /* User Edit Page  */
+        Route::get('/UserEdit/{id}', [ControllersUser::class, 'edit'])->name('UserEdit');
 
-    /* Role Page listing And Listing Using Ajax */
-    Route::get('/role', [App\Http\Controllers\RoleController::class, 'index'])->name('role');
+        /* User Edit Page Submit */
+        Route::post('/UserEdit/{id}', [ControllersUser::class, 'Update'])->name('UserEdit');
 
-    /* Role Add by Ajax */
-    Route::post('/role', [App\Http\Controllers\RoleController::class, 'store'])->name('role');
-
-    /* Role Edit */
-    Route::PUT('/role', [App\Http\Controllers\RoleController::class, 'update'])->name('role');
-
-    /* Get Assigned Permission To role  */
-    Route::post('/getPermisssion', [App\Http\Controllers\RoleController::class, 'getPermssion'])->name('permission.get');
-
-    /* Assign Permission To role  */
-    Route::post('/setPermisssion', [App\Http\Controllers\RoleController::class, 'assignPermission'])->name('permission.set');
-
-    /* Permission page With Listing */
-    Route::get('/permission', [App\Http\Controllers\Permission::class, 'index'])->name('permission');
-
-    /* Add Permission by Ajax */
-    Route::post('/permission', [App\Http\Controllers\Permission::class, 'store'])->name('permission');
+    });
 
 
+    Route::group(['middleware' => ['can:Add Role']], function () {
+
+        /* Role Page listing And Listing Using Ajax */
+        Route::get('/role', [RoleController::class, 'index'])->name('role');
+
+        /* Role Add by Ajax */
+        Route::post('/role', [RoleController::class, 'store'])->name('role');
+
+        /* Role Edit */
+        Route::PUT('/role', [RoleController::class, 'update'])->name('role');
+
+        /* Get Assigned Permission To role  */
+        Route::post('/getPermisssion', [RoleController::class, 'getPermssion'])->name('permission.get');
+
+        /* Assign Permission To role  */
+        Route::post('/setPermisssion', [RoleController::class, 'assignPermission'])->name('permission.set');
+
+    });
 
 
+    Route::group(['middleware' => ['can:Add Permission']], function () {
 
+        /* Permission page With Listing */
+        Route::get('/permission', [Permission::class, 'index'])->name('permission');
+
+        /* Add Permission by Ajax */
+        Route::post('/permission', [Permission::class, 'store'])->name('permission');
+        
+    });
+    
 });

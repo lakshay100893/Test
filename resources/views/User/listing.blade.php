@@ -45,7 +45,7 @@
             $('#order-listing').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('lsiting') }}",
+                ajax: "{{ route('Userlist') }}",
                 columns: [
                     {
                         data: 'title',

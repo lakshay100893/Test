@@ -12,7 +12,7 @@
         <div class="nav-profile-text d-flex flex-column">
           @auth
           <span class="font-weight-bold mb-2">{{Auth::user()->first_name.' '.Auth::user()->last_name}}</span>
-          <span class="text-secondary text-small">{{Auth::user()->title}}</span>
+          <span class="text-secondary text-small">{{Auth::user()->getRoleNames()->implode('name',',')}}</span>
           @endauth
         </div>
         <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
@@ -24,6 +24,7 @@
         <i class="mdi mdi-home menu-icon"></i>
       </a>
     </li>
+    
     @canany(['User Add','User List'])
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
@@ -43,6 +44,7 @@
       </div>
     </li>
     @endcanany
+
     @canany(['Add Role','Add Permission'])
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#rolePermission" aria-expanded="false" aria-controls="ui-basic">
