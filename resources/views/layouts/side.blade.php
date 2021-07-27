@@ -24,6 +24,7 @@
         <i class="mdi mdi-home menu-icon"></i>
       </a>
     </li>
+    @canany(['User Add','User List'])
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
         <span class="menu-title">User's</span>
@@ -32,13 +33,17 @@
       </a>
       <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">
-          @can('User Add')
-          <li class="nav-item"> <a class="nav-link" href="{{ route('register') }}">Add</a></li>
-          @endcan
-          <li class="nav-item"> <a class="nav-link" href="{{ route('Userlist') }}">List</a></li>
+        @can('User Add')
+        <li class="nav-item"> <a class="nav-link" href="{{ route('register') }}">Add</a></li>
+        @endcan
+        @can('User List')
+        <li class="nav-item"> <a class="nav-link" href="{{ route('Userlist') }}">List</a></li>
+        @endcan
         </ul>
       </div>
     </li>
+    @endcanany
+    
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#rolePermission" aria-expanded="false" aria-controls="ui-basic">
         <span class="menu-title">Role's & Permission's</span>

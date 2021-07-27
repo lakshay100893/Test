@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -69,7 +70,7 @@ class RoleController extends Controller
                 $Permission = Permission::findMany($request->permission);
                 $Permission = $role->givePermissionTo($Permission);
             }
-            
+            app()[PermissionRegistrar::class]->forgetCachedPermissions();
             return $Permission;
         }
     }
