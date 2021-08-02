@@ -14,7 +14,7 @@ class File extends Model
      *
      * @var array
      */
-    protected $fillable = ['file_url', 'type',];
+    protected $fillable = ['file_url', 'type', 'status'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -27,5 +27,4 @@ class File extends Model
     {
         return $this->belongsToMany(User::class, UserFile::class);
     }
-  
 }
