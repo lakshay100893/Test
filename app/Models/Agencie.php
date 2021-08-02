@@ -23,7 +23,7 @@ class Agencie extends Model
 
     public function Files(): BelongsToMany
     {
-        return $this->belongsToMany(UserFile::class, 'agencyFiles', 'agencie_id', 'file_id' );
+        return $this->belongsToMany(File::class, 'agencyFiles', 'agencie_id', 'file_id' );
     }
 
     

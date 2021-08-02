@@ -1,7 +1,7 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
     <li class="nav-item nav-profile">
-      <a href="#" class="nav-link">
+      <a href="{{ route('profile') }}" class="nav-link">
         <div class="nav-profile-image">
           @auth
           <img src="{{ asset( (Auth::user()->avtar) ? Auth::user()->avtar : 'assets/images/faces/face1.jpg') }}" width="32px" height="32px" alt="profile">
@@ -44,6 +44,24 @@
       </div>
     </li>
     @endcanany
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+        <span class="menu-title">Agencie & Hospital</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-playlist-play menu-icon"></i>
+      </a>
+      <div class="collapse" id="ui-basic">
+        <ul class="nav flex-column sub-menu">
+          @can('User Add')
+          <li class="nav-item"> <a class="nav-link" href="{{ route('agencie') }}">Agencie's</a></li>
+          @endcan
+          @can('User List')
+          <li class="nav-item"> <a class="nav-link" href="{{ route('Userlist') }}">Hospital's</a></li>
+          @endcan
+        </ul>
+      </div>
+    </li>
 
     @canany(['Add Role','Add Permission'])
     <li class="nav-item">

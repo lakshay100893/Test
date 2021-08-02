@@ -92,8 +92,7 @@ class RegisterController extends Controller
                     $Ext =  $files->extension();
                     $name = time() . rand(1, 100) . '.' . $Ext;
                     $files->move(public_path('UserFiles'), $name);
-                    $file = File::create(['file_url' => ('UserFiles/' . $name), 'type' => $Ext]);
-                    UserFile::create(['file_id' => $file->id, 'user_id' => $user->id,]);
+                    $user->UserFile()->create(['file_url' => ('UserFiles/' . $name), 'type' => $Ext]);
                 }
             }
             if ($request->has('role') && $request->filled('role')) {

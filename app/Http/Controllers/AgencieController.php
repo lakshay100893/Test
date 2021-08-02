@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\AgencieDataTable;
 use App\Models\Agencie;
+use App\Models\UserFile;
 use Illuminate\Http\Request;
 
 class AgencieController extends Controller
@@ -12,9 +14,9 @@ class AgencieController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(AgencieDataTable $datatable)
     {
-        //
+        return $datatable->render('Agencie.listing');
     }
 
     /**
@@ -24,7 +26,7 @@ class AgencieController extends Controller
      */
     public function create()
     {
-        //
+        return view('Agencie.Add');
     }
 
     /**
@@ -35,7 +37,27 @@ class AgencieController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:agencies|max:255',
+            'phn_no' => 'max:255',
+            'description' => 'required',
+            'address' => 'required',
+        ]);
+
+
+        $agencie = Agencie::create($request->all());
+
+        if ($request->has('file_url')) {
+            foreach ($request->file('file_url') as $files) {
+                $Ext =  $files->extension();
+                $name = time() . rand(1, 100) . '.' . $Ext;
+                $files->move(public_path('UserFiles'), $name);
+                $agencie->Files()->create(['file_url' => ('UserFiles/' . $name), 'type' => $Ext]);
+            }
+        }
+
+        return redirect('/agencie')->with('success', 'Successfully Create Agencie');
     }
 
     /**

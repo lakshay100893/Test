@@ -16,6 +16,7 @@
   <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link rel="stylesheet" href="{{asset('assets/css/dataTables.bootstrap4.css')}}">
+  <link rel="stylesheet" href="{{asset('assets/css/buttons.bootstrap4.min.css')}}">
   <!-- endinject -->
   <!-- Layout styles -->
   <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">

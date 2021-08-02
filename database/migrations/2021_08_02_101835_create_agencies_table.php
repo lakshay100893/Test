@@ -22,7 +22,7 @@ class CreateAgenciesTable extends Migration
             $table->text('address');
             $table->integer('is_blocked')->default(0);
             $table->integer('is_active')->default(1);
-            $table->unsignedBigInteger('subscription_id');
+            $table->unsignedBigInteger('subscription_id')->default(0);
             $table->timestamps();
         });
         

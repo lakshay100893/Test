@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgencieController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Profile;
 use App\Http\Controllers\RoleController;
@@ -93,5 +94,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/permissionEdit', [Permission::class, 'update'])->name('permissionEdit');
 
     });
+
+
+    /* Permission page With Listing */
+    Route::get('/agencie', [AgencieController::class, 'index'])->name('agencie');
     
+    /* ADD Agencie   */
+    Route::get('/addagencie', [AgencieController::class, 'create'])->name('addagencie');
+    Route::post('/addagencie', [AgencieController::class, 'store'])->name('addagencie');
+
 });

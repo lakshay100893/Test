@@ -73,7 +73,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Date of Birth</label>
                         <div class="col-sm-9">
-                            <input type="date" class="form-control @error('dob') is-invalid @enderror" placeholder="dd/mm/yyyy" name="dob" value="{{ old('dob') ?? date('Y-m-d',strtotime($user->LocumUser->dob)) }}">
+                            <input type="date" class="form-control @error('dob') is-invalid @enderror" placeholder="dd/mm/yyyy" name="dob" value="{{ old('dob') ?? date('Y-m-d',strtotime($user->LocumUser->dob??'')) }}">
                             @error('dob')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -151,7 +151,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Address</label>
                         <div class="col-sm-9">
-                            <textarea type="text" name="home_address" class="form-control @error('home_address') is-invalid @enderror">{{ old('home_address') ?? $user->LocumUser->home_address }}</textarea>
+                            <textarea type="text" name="home_address" class="form-control @error('home_address') is-invalid @enderror">{{ old('home_address') ?? $user->LocumUser->home_address??'' }}</textarea>
                             @error('home_address')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -166,7 +166,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Profile Summary</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control @error('profile_summary') is-invalid @enderror" name="profile_summary" value="{{ old('profile_summary') ?? $user->LocumUser->profile_summary  }}">
+                            <input type="text" class="form-control @error('profile_summary') is-invalid @enderror" name="profile_summary" value="{{ old('profile_summary') ?? $user->LocumUser->profile_summary ?? ''  }}">
                             @error('profile_summary')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -179,7 +179,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">key Skills</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control @error('key_skills') is-invalid @enderror" name="key_skills" value="{{ old('key_skills')  ?? $user->LocumUser->key_skills  }}">
+                            <input type="text" class="form-control @error('key_skills') is-invalid @enderror" name="key_skills" value="{{ old('key_skills')  ?? $user->LocumUser->key_skills ?? ''  }}">
                             @error('key_skills')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
