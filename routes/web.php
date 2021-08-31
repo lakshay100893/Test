@@ -99,8 +99,17 @@ Route::middleware(['auth'])->group(function () {
     /* Permission page With Listing */
     Route::get('/agencie', [AgencieController::class, 'index'])->name('agencie');
     
-    /* ADD Agencie   */
+    /* ADD Form Open Agencie   */
     Route::get('/addagencie', [AgencieController::class, 'create'])->name('addagencie');
+    
+    /* ADD Form Submit Agencie   */
     Route::post('/addagencie', [AgencieController::class, 'store'])->name('addagencie');
+    
+    
+    Route::get('/editagencie/{agencie}', [AgencieController::class, 'edit'])->name('editagencie');
+    
+    Route::post('/editagencie/{agencie}', [AgencieController::class, 'update'])->name('editagencie');
+
+
 
 });

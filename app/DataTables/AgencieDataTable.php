@@ -21,7 +21,19 @@ class AgencieDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', 'agencie.action');
+            ->addIndexColumn()
+            ->editColumn('created_at', function($val) {
+                return $val->created_at->format('M d\, Y');
+            })
+            ->addColumn('images',function ($val)
+            {
+                return $val->Files->count().' Images';
+            })
+            ->addColumn('action',function ($val)
+            {
+                $button = '<a href="'.route('editagencie',['agencie'=>$val->id]).'" class="btn btn-sm btn-primary">Edit</a>';
+                return $button;
+            });
     }
 
     /**
@@ -69,7 +81,8 @@ class AgencieDataTable extends DataTable
             Column::make('email'),
             Column::make('phn_no'),
             Column::make('address'),
-            Column::make('updated_at'),
+            Column::make('created_at'),
+            Column::make('images'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)

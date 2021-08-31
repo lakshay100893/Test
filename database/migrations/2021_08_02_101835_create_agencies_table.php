@@ -29,9 +29,9 @@ class CreateAgenciesTable extends Migration
 
         Schema::create('agencyFiles', function (Blueprint $table) {
             $table->unsignedBigInteger('agencie_id');
-            $table->foreign('agencie_id')->references('id')->on('agencies');
+            $table->foreign('agencie_id')->references('id')->on('agencies')->onDelete('cascade');
             $table->unsignedBigInteger('file_id');
-            $table->foreign('file_id')->references('id')->on('files');
+            $table->foreign('file_id')->references('id')->on('files')->onDelete('cascade');
         });
 
 

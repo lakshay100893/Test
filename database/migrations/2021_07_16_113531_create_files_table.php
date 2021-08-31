@@ -20,6 +20,15 @@ class CreateFilesTable extends Migration
             $table->integer('status')->default(1);
             $table->timestamps();
         });
+
+        Schema::create('user_files', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('file_id');
+            $table->foreign('file_id')->references('id')->on('files')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**

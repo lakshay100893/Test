@@ -31,24 +31,6 @@ class CreateUsersTable extends Migration
         });
 
 
-        DB::table('users')->insert(
-            array(
-                'title' => 'Software Developer',
-                'first_name' => 'lakshay',
-                'last_name' => 'verma',
-                'email' => 'lakshay@sourcesoftsolutions.com',
-                'avtar' => NULL,
-                'email_verified_at' => NULL,
-                'password' => '$2y$10$F34Y9YECcvNBPAw8Z1db6OmDbBFN7CVQzsiVLiKEguWjmYo9hEaG2',
-                'two_factor_auth' => NULL,
-                'gender' => 'male',
-                'is_blocked' => '0',
-                'is_active' => '1',
-                'remember_token' => NULL,
-                'created_at' => Date::now(),
-                'updated_at' => Date::now(),
-            )
-        );
     }
 
     /**
