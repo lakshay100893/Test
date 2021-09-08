@@ -110,6 +110,8 @@ Route::middleware(['auth'])->group(function () {
     
     Route::post('/editagencie/{agencie}', [AgencieController::class, 'update'])->name('editagencie');
 
+    Route::delete('/editagencie/{agencie}', [AgencieController::class, 'imageDelete'])->name('editagencie');
+
 
 
 });

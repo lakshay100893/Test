@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\AgencieDataTable;
+use App\Http\Requests\Agencie as RequestsAgencie;
 use App\Models\Agencie;
 use App\Models\File;
 use App\Models\UserFile;
@@ -38,17 +39,8 @@ class AgencieController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RequestsAgencie $request)
     {
-        $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email|unique:agencies|max:255',
-            'phn_no' => 'max:255',
-            'description' => 'required',
-            'address' => 'required',
-        ]);
-
-
         $agencie = Agencie::create($request->all());
 
         if ($request->has('file_url')) {
@@ -71,7 +63,6 @@ class AgencieController extends Controller
      */
     public function show(Agencie $agencie)
     {
-       
     }
 
     /**
@@ -82,7 +73,7 @@ class AgencieController extends Controller
      */
     public function edit(Agencie $agencie)
     {
-        return view('Agencie.edit',['data'=>$agencie]);
+        return view('Agencie.edit', ['data' => $agencie]);
     }
 
     /**
@@ -92,36 +83,22 @@ class AgencieController extends Controller
      * @param  \App\Models\Agencie  $agencie
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Agencie $agencie)
+    public function update(RequestsAgencie $request, Agencie $agencie)
     {
-        if($request->ajax()){
-            // return public_path();
-            if($agencie->Files()->detach($request->id)){
-                $file = File::find($request->id);
-                Storage::delete($file->file_url);
-                return $file->delete();
-            }
+        try {
+            $agencie->fill($request->input())->save();
 
-            return '0';
-        }
-
-        $request->validate([
-            'name' => 'required|max:255',
-            'email' => ['required','email',Rule::unique('agencies')->ignore($agencie->id),'max:255'],
-            'phn_no' => 'max:255',
-            'description' => 'required',
-            'address' => 'required',
-        ]);
-       
-        $agencie->fill($request->input())->save();
-       
-        if ($request->has('file_url')) {
-            foreach ($request->file('file_url') as $files) {
-                $Ext =  $files->extension();
-                $name = time() . rand(1, 100) . '.' . $Ext;
-                $files->move(public_path('UserFiles'), $name);
-                $agencie->Files()->create(['file_url' => ('UserFiles/' . $name), 'type' => $Ext]);
+            if ($request->has('file_url')) {
+                foreach ($request->file('file_url') as $files) {
+                    $Ext =  $files->extension();
+                    $name = time() . rand(1, 100) . '.' . $Ext;
+                    $files->move(public_path('UserFiles'), $name);
+                    $agencie->Files()->create(['file_url' => ('UserFiles/' . $name), 'type' => $Ext]);
+                }
             }
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->withInput()->with('error', 'Something Wrong. Try Again');
         }
 
         return redirect('/agencie')->with('success', 'Successfully Update Agencie ');
@@ -136,5 +113,18 @@ class AgencieController extends Controller
     public function destroy(Agencie $agencie)
     {
         //
+    }
+
+    public function imageDelete(Request $request, Agencie $agencie)
+    {
+        if ($request->ajax()) {
+            // return public_path();
+            if ($agencie->Files()->detach($request->id)) {
+                $file = File::find($request->id);
+                Storage::delete($file->file_url);
+                return $file->delete();
+            }
+            return '0';
+        }
     }
 }

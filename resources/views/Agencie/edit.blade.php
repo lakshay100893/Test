@@ -151,7 +151,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            type: 'POST',
+                            type: 'DELETE',
                             url: "{{ route('editagencie',['agencie'=>$data->id]) }}",
                             data: { id},
                             success: (data) => {
