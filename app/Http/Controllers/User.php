@@ -8,7 +8,6 @@ use App\Models\User as Users;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DataTables;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 

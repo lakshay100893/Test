@@ -6,8 +6,6 @@ use App\DataTables\AgencieDataTable;
 use App\Http\Requests\Agencie as RequestsAgencie;
 use App\Models\Agencie;
 use App\Models\File;
-use App\Models\UserFile;
-use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 

@@ -24,7 +24,7 @@ Auth::routes();
 
 Route::get('/', function () {
     if (Auth::check()) {
-        return redirect()->intended('/home')->with('success', 'You Are Already loggedin');
+        return redirect()->intended('home')->with('success', 'You Are Already loggedin');
     }
     return view('welcome');
 });
@@ -33,85 +33,88 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
 
     /* Dashboard Page  */
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('home', [HomeController::class, 'index'])->name('home');
 
     /* Side menu Hide And Show */
-    Route::post('/headerFix', [HomeController::class, 'headerFix'])->name('headerFix');
+    Route::post('headerFix', [HomeController::class, 'headerFix'])->name('headerFix');
 
     /* Profile Page Open  */
-    Route::get('/profile', [Profile::class, 'show'])->name('profile');
+    Route::get('profile', [Profile::class, 'show'])->name('profile');
 
     /* Profile Image Update */
-    Route::post('/profile', [Profile::class, 'update'])->name('profile');
+    Route::post('profile', [Profile::class, 'update'])->name('profile');
 
     /* User Profile View */
-    Route::get('/profile/{id}', [Profile::class, 'show'])->middleware('can:User View')->name('Userprofile');
+    Route::get('profile/{id}', [Profile::class, 'show'])->middleware('can:User View')->name('Userprofile');
 
     /* User Listing Page And Getting by Ajax  */
-    Route::get('/Userlist', [ControllersUser::class, 'index'])->middleware('can:User List')->name('Userlist');
+    Route::get('Userlist', [ControllersUser::class, 'index'])->middleware('can:User List')->name('Userlist');
 
 
-    Route::group(['middleware' => ['can:User Edit']], function () {
+    Route::group(['middleware' => ['can:User Edit'],'prefix' => 'UserEdit', 'as' => 'UserEdit'], function () {
 
         /* User Edit Page  */
-        Route::get('/UserEdit/{id}', [ControllersUser::class, 'edit'])->name('UserEdit');
+        Route::get('{id}', [ControllersUser::class, 'edit']);
 
         /* User Edit Page Submit */
-        Route::post('/UserEdit/{id}', [ControllersUser::class, 'Update'])->name('UserEdit');
-
+        Route::post('{id}', [ControllersUser::class, 'Update']);
+        
     });
 
 
     Route::group(['middleware' => ['can:Add Role']], function () {
 
         /* Role Page listing And Listing Using Ajax */
-        Route::get('/role', [RoleController::class, 'index'])->name('role');
+        Route::get('role', [RoleController::class, 'index'])->name('role');
 
         /* Role Add by Ajax */
-        Route::post('/role', [RoleController::class, 'store'])->name('role');
+        Route::post('role', [RoleController::class, 'store'])->name('role');
 
         /* Role Edit */
-        Route::post('/roleEdit', [RoleController::class, 'update'])->name('roleEdit');
+        Route::post('roleEdit', [RoleController::class, 'update'])->name('roleEdit');
 
         /* Get Assigned Permission To role  */
-        Route::post('/getPermisssion', [RoleController::class, 'getPermssion'])->name('permission.get');
+        Route::post('getPermisssion', [RoleController::class, 'getPermssion'])->name('permission.get');
 
         /* Assign Permission To role  */
-        Route::post('/setPermisssion', [RoleController::class, 'assignPermission'])->name('permission.set');
-
+        Route::post('setPermisssion', [RoleController::class, 'assignPermission'])->name('permission.set');
     });
 
 
     Route::group(['middleware' => ['can:Add Permission']], function () {
 
         /* Permission page With Listing */
-        Route::get('/permission', [Permission::class, 'index'])->name('permission');
+        Route::get('permission', [Permission::class, 'index'])->name('permission');
 
         /* Add Permission by Ajax */
-        Route::post('/permission', [Permission::class, 'store'])->name('permission');
-        
+        Route::post('permission', [Permission::class, 'store'])->name('permission');
+
         /* Edit Permission by Ajax */
-        Route::post('/permissionEdit', [Permission::class, 'update'])->name('permissionEdit');
+        Route::post('permissionEdit', [Permission::class, 'update'])->name('permissionEdit');
+    });
+
+    /* Permission page With Listing */
+    Route::get('agencie', [AgencieController::class, 'index'])->name('agencie');
+
+    Route::group(['as' => 'addagencie'], function () {
+
+        /* ADD Form Open Agencie   */
+        Route::get('addagencie', [AgencieController::class, 'create']);
+
+        /* ADD Form Submit Agencie   */
+        Route::post('addagencie', [AgencieController::class, 'store']);
 
     });
 
+    Route::group(['prefix' => 'editagencie', 'as' => 'editagencie'], function () {
 
-    /* Permission page With Listing */
-    Route::get('/agencie', [AgencieController::class, 'index'])->name('agencie');
-    
-    /* ADD Form Open Agencie   */
-    Route::get('/addagencie', [AgencieController::class, 'create'])->name('addagencie');
-    
-    /* ADD Form Submit Agencie   */
-    Route::post('/addagencie', [AgencieController::class, 'store'])->name('addagencie');
-    
-    
-    Route::get('/editagencie/{agencie}', [AgencieController::class, 'edit'])->name('editagencie');
-    
-    Route::post('/editagencie/{agencie}', [AgencieController::class, 'update'])->name('editagencie');
+        Route::get('{agencie}', [AgencieController::class, 'edit']);
 
-    Route::delete('/editagencie/{agencie}', [AgencieController::class, 'imageDelete'])->name('editagencie');
+        Route::post('{agencie}', [AgencieController::class, 'update']);
 
+        Route::delete('{agencie}', [AgencieController::class, 'imageDelete']);
+
+    });
 
 
 });
