@@ -38,27 +38,29 @@ Route::middleware(['auth'])->group(function () {
     /* Side menu Hide And Show */
     Route::post('headerFix', [HomeController::class, 'headerFix'])->name('headerFix');
 
-    /* Profile Page Open  */
-    Route::get('profile', [Profile::class, 'show'])->name('profile');
+    Route::group(['prefix' => 'profile'], function () {
+        
+        Route::group(['as' => 'profile'], function () {
+            /* Profile Page Open  */
+            Route::get('/', [Profile::class, 'show']);
 
-    /* Profile Image Update */
-    Route::post('profile', [Profile::class, 'update'])->name('profile');
-
-    /* User Profile View */
-    Route::get('profile/{id}', [Profile::class, 'show'])->middleware('can:User View')->name('Userprofile');
-
+            /* Profile Image Update */
+            Route::post('/', [Profile::class, 'update']);
+        });
+        /* User Profile View */
+        Route::get('{id}', [Profile::class, 'show'])->middleware('can:User View')->name('Userprofile');
+    });
     /* User Listing Page And Getting by Ajax  */
     Route::get('Userlist', [ControllersUser::class, 'index'])->middleware('can:User List')->name('Userlist');
 
 
-    Route::group(['middleware' => ['can:User Edit'],'prefix' => 'UserEdit', 'as' => 'UserEdit'], function () {
+    Route::group(['middleware' => ['can:User Edit'], 'prefix' => 'UserEdit', 'as' => 'UserEdit'], function () {
 
         /* User Edit Page  */
         Route::get('{id}', [ControllersUser::class, 'edit']);
 
         /* User Edit Page Submit */
         Route::post('{id}', [ControllersUser::class, 'Update']);
-        
     });
 
 
@@ -83,11 +85,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(['middleware' => ['can:Add Permission']], function () {
 
-        /* Permission page With Listing */
-        Route::get('permission', [Permission::class, 'index'])->name('permission');
+        Route::group(['as' => 'permission'], function () {
 
-        /* Add Permission by Ajax */
-        Route::post('permission', [Permission::class, 'store'])->name('permission');
+            /* Permission page With Listing */
+            Route::get('permission', [Permission::class, 'index']);
+
+            /* Add Permission by Ajax */
+            Route::post('permission', [Permission::class, 'store']);
+        });
 
         /* Edit Permission by Ajax */
         Route::post('permissionEdit', [Permission::class, 'update'])->name('permissionEdit');
@@ -103,7 +108,6 @@ Route::middleware(['auth'])->group(function () {
 
         /* ADD Form Submit Agencie   */
         Route::post('addagencie', [AgencieController::class, 'store']);
-
     });
 
     Route::group(['prefix' => 'editagencie', 'as' => 'editagencie'], function () {
@@ -113,8 +117,5 @@ Route::middleware(['auth'])->group(function () {
         Route::post('{agencie}', [AgencieController::class, 'update']);
 
         Route::delete('{agencie}', [AgencieController::class, 'imageDelete']);
-
     });
-
-
 });
